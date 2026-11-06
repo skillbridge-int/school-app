@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مدرسة جابر البلعزي</title>
+<meta name="theme-color" content="#0f5c8a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="مدرسة البلعزي">
+<style>
+html,body{height:100%;margin:0}
+body{display:flex;align-items:center;justify-content:center;background:#0a4466;color:#fff;
+  font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;text-align:center}
+.box{padding:24px;max-width:420px}
+.logo{width:112px;height:112px;border-radius:26px;box-shadow:0 8px 28px rgba(0,0,0,.3);margin-bottom:18px}
+h1{font-size:22px;margin:0 0 6px}
+p{margin:6px 0;opacity:.9;line-height:1.7}
+.spin{width:30px;height:30px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;margin:18px auto 0;animation:r 1s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+a.btn,button{display:inline-block;margin-top:16px;background:#fff;color:#0f5c8a;border:0;border-radius:12px;padding:10px 22px;font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff}
+.hint{position:fixed;bottom:10px;inset-inline:0;text-align:center;font-size:12px;opacity:.85}
+.hint a{color:#fff}
+code{background:rgba(255,255,255,.18);padding:1px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="box" id="box">
+  <img class="logo" src="icons/icon-192.png" alt="">
+  <h1 id="name"></h1>
+  <div id="msg"></div>
+</div>
+<script src="config.js"></script>
+<script>
+(function(){
+  var C = window.APP_CONFIG || {}, box = document.getElementById('msg');
+  document.getElementById('name').textContent = C.SCHOOL_NAME || '';
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function(){}); }
+  function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var url = (C.APP_URL || '').trim();
+  if (!/^https:\/\/script\.google\.com\//.test(url)) {
+    box.innerHTML = '<p>لم يُضبط رابط المنظومة بعد.</p><p>افتح الملف <code>config.js</code> وضع رابط تطبيق الويب في <code>APP_URL</code>.</p>';
+    return;
+  }
+  if (C.MODE === 'frame') {
+    var f = document.createElement('iframe');
+    f.src = url; f.title = C.SCHOOL_NAME; f.allow = 'clipboard-write';
+    document.body.appendChild(f);
+    var h = document.createElement('div'); h.className = 'hint';
+    h.innerHTML = '<a href="' + esc(url) + '" target="_top">إن لم تظهر البيانات اضغط هنا لفتح المنظومة مباشرة</a>';
+    document.body.appendChild(h);
+    document.getElementById('box').style.display = 'none';
+    return;
+  }
+  box.innerHTML = '<p>جارٍ فتح المنظومة…</p><div class="spin"></div><a class="btn" href="' + esc(url) + '">فتح المنظومة</a>';
+  setTimeout(function(){ location.replace(url); }, 700);
+})();
+</script>
+</body>
+</html>
