@@ -1,5 +1,5 @@
 /* يخزّن صفحة الغلاف والأيقونات فقط ليفتح التطبيق فورًا. بيانات المدرسة لا تُخزَّن أبدًا. */
-var CACHE = 'school-shell-v1';
+var CACHE = 'school-shell-v2';
 var FILES = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', function(e){ e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(FILES); }).then(function(){ return self.skipWaiting(); })); });
 self.addEventListener('activate', function(e){

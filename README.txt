@@ -1,4 +1,4 @@
-غلاف تطبيق «مدرسة SkillBridge International»
+غلاف تطبيق «SkillBridge International School»
 ================================
 الملفات:
   index.html            صفحة الغلاف (لا تعدّلها)
