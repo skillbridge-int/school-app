@@ -56,8 +56,25 @@ code{background:rgba(255,255,255,.18);padding:1px 6px;border-radius:6px}
     document.getElementById('box').style.display = 'none';
     return;
   }
-  box.innerHTML = '<p>جارٍ فتح المنظومة…</p><div class="spin"></div><a class="btn" href="' + esc(url) + '">فتح المنظومة</a>';
-  setTimeout(function(){ location.replace(url); }, 700);
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+  if (standalone) {
+    // التطبيق المثبّت: افتح المنظومة مباشرة
+    box.innerHTML = '<p>جارٍ فتح المنظومة…</p><div class="spin"></div><a class="btn" href="' + esc(url) + '">فتح المنظومة</a>';
+    setTimeout(function(){ location.replace(url); }, 500);
+    return;
+  }
+  // المتصفح العادي: ابقَ في هذه الصفحة ليتمكّن المتصفح من تثبيت التطبيق بأيقونة SkillBridge
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  box.innerHTML = '<p>أهلاً بك في المنظومة</p>' +
+    '<button id="inst" style="display:none">تثبيت التطبيق</button> ' +
+    '<a class="btn" href="' + esc(url) + '">فتح المنظومة</a>' +
+    '<p id="how" style="font-size:13px;margin-top:18px;opacity:.85">' +
+    (ios ? 'للتثبيت على الآيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».'
+         : 'للتثبيت: اضغط «تثبيت التطبيق» إن ظهر، أو من قائمة المتصفح اختر «تثبيت التطبيق».') + '</p>';
+  var dp = null, ib = document.getElementById('inst');
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); dp = e; ib.style.display = 'inline-block'; });
+  ib.addEventListener('click', function(){ if (dp) { dp.prompt(); dp = null; ib.style.display = 'none'; } });
+  window.addEventListener('appinstalled', function(){ document.getElementById('how').textContent = 'تم التثبيت. افتح التطبيق من سطح المكتب أو قائمة ابدأ.'; ib.style.display = 'none'; });
 })();
 </script>
 </body>
